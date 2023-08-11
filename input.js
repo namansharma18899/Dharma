@@ -1,6 +1,11 @@
-export class InputHandler { 
+export class InputHandler {
     constructor(){
         this.keys = []
+        window.addEventListener('keypress', (e)=>{
+            if(e.key == 'w'){
+                this.keys.push(e.key);
+            }
+        })
         window.addEventListener('keydown', (e)=>{
             if ((e.key == 'w' ||
                  e.key == 'a' ||

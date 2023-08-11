@@ -10,11 +10,11 @@ window.addEventListener('load', ()=>{
         constructor(width, height){
             this.width = width
             this.height = height
-            this.player = new Player(this);
             this.InputHandler = new InputHandler();
+            this.player = new Player(this, this.InputHandler);
         }
         update(context){
-            this.player.update(this.InputHandler.keys)
+            this.player.update()
         }
         draw(context){
             this.player.draw(context);
