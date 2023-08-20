@@ -17,6 +17,9 @@
 #player {
     display: none;
 }
+#laser {
+    display: none;
+}
 #background {
     display: none;
 }

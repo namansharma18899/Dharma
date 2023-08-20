@@ -5,9 +5,16 @@ import { RunningState } from "./playerStates.js";
 export class Player {
     constructor(game, inputHandler) {
         this.game = game
-        this.ih = inputHandler
         this.width = 100;
         this.height = 100;
+        this.laser = {
+            img: document.getElementById('laser'),
+            fired: false,
+            x: 0,
+            y: this.game.height - this.height,
+            speed: 4
+        }
+        this.ih = inputHandler
         this.x = 0;
         this.y = this.game.height - this.height;
         this.playerWidth = 575
@@ -77,10 +84,30 @@ export class Player {
                 this.movements.jumping.ascent = true
             }
         }
+        // handle laser
+        if(this.ih.keys.includes('x') || (this.laser.fired==true)){
+            if(this.laser.fired==true){
+                if(this.laser.x < this.game.width){
+                    this.laser.x+=this.laser.speed;
+                }else{
+                    this.laser.x=0;
+                    this.laser.fired=false;
+                }
+            }else{
+                this.laser.fired=true
+                this.laser.x = 0+ this.x + this.width
+                console.log('this y -> ',this.y)
+                this.laser.y = this.y + 40
+                // this.audioHandler.play()
+            }
+        }
     }
 
     draw(context) {
         context.drawImage(this.background, 0,0, 1500,500);
         context.drawImage(this.image, this.playerFrameX, this.playerFrameY, this.playerWidth, this.playerHeight, this.x, this.y, this.width, this.height);
+        if(this.laser.fired){
+        context.drawImage(this.laser.img, this.laser.x, this.laser.y)
+    }
     }
 }

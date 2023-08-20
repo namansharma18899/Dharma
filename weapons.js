@@ -1,0 +1,6 @@
+class Laser{
+    constructor(player){
+
+    }
+    
+}
