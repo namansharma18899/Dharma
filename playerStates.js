@@ -1,106 +1,86 @@
 const states = {
     'SITTING': 0,
     'RUNNING': 1,
-    'JUMPING': 2
+    'JUMPING': 2,
+    'FALLING': 3
 }
-
-
 const playerWidth = 575
 const playerHeight = 523
 
-const imageFramesInfo = [
-    {
-        'id': 'idle',
-        'frames': 7
-    },
-    {
-        'id': 'jump',
-        'frames': 7
-    },
-    {
-        'id': 'fall',
-        'frames': 7
-    },
-    {
-        'id': 'run',
-        'frames': 9
-    },
-    {
-        'id': 'dizzy',
-        'frames': 11
-    },
-    {
-        'id': 'sit',
-        'frames': 5
-    },
-    {
-        'id': 'roll',
-        'frames': 7
-    },
-    {
-        'id': 'bite',
-        'frames': 7
-    },
-    {
-        'id': 'ko',
-        'frames': 12
-    },
-    {
-        'id': 'getHit',
-        'frames': 4
-    },
-]
-
-const imageAnimations = {}
-imageFramesInfo.forEach((state, index) => {
-    var coord = []
-    for (var i = 0; i < state.frames; i++) {
-        var absX = playerWidth * i
-        var absY = playerHeight * index
-        coord.push({ 'x': absX, 'y': absY })
-    }
-    imageAnimations[state.id] = coord
-})
-
-
-class State{
-    constructor(state){
+class State {
+    constructor(state) {
         this.state = state
     }
 }
 
-export class RunningState extends State{
-    constructor(){
-        super('RUNNING');
-        this.frames = 9
-        this.frameY = 0
-        this.animationMovements = imageAnimations['run'];
+export class Falling extends State {
+    constructor(player) {
+        super('FALLING');
+        this.player = player
     }
     // Handle All variations in SITTING STATE
-    
-    getCord(counter){
-        return this.animationMovements[Math.floor(counter / this.frames) % this.animationMovements.length]
+    enter() {
+        this.player.playerFrameY = 2;
+    }
+
+    handleInput(input) {
+        if (this.player.onGround()) {
+            this.player.setState(states.RUNNING);
+        }
     }
 }
-
-
-export class SittingState extends State{
-    constructor(){
-        super('SITTING');
-        this.frames = 7
-        this.frameY = 0
-        this.animationMovements = imageAnimations['idle'];
+export class Jumping extends State {
+    constructor(player) {
+        super('JUMPING');
+        this.player = player
     }
     // Handle All variations in SITTING STATE
-    handleAnimation(player){
-        
+    enter() {
+        if (this.player.onGround()) this.player.vy -= 25;
+        this.player.playerFrameY = 1;
     }
-    getCord(counter){
-        return this.animationMovements[Math.floor(counter / this.frames) % this.animationMovements.length]
-        // console.log('X -> ',(playerFrameX))
-        // console.log('Number -> ',this.frames*super.getPlayerWidth())
-        // var tempPFX = (playerFrameX+super.getPlayerWidth())%(this.frames*super.getPlayerWidth())
-        // console.log("animate -> ", tempPFX)
-        // return {'x':tempPFX, 'y':this.frameY}
+
+    handleInput(input) {
+        if (this.player.vy > this.player.weight) {
+            this.player.setState(states.FALLING);
+        }
+    }
+}
+export class Running extends State {
+    constructor(player) {
+        super('RUNNING');
+        this.player = player
+    }
+    // Handle All variations in SITTING STATE
+    enter() {
+        this.player.playerFrameY = 3;
+    }
+
+    handleInput(input) {
+        if (input.includes('w')) {
+            this.player.setState(states.JUMPING);
+        }
+        if (input.includes('s')) {
+            this.player.setState(states.SITTING); // 1 refers to running state
+        }
+
+    }
+}
+export class Sitting extends State {
+    constructor(player) {
+        super('SITTING');
+        this.player = player
+    }
+
+    enter() {
+        this.player.playerFrameY = 5;
+    }
+
+    handleInput(input) {
+        console.log(`input > ${input}`)
+        if (input.includes('d') || input.includes('a')) {
+            this.player.setState(states.RUNNING); // 1 refers to running state
+        }
+
     }
 }
