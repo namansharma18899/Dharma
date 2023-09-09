@@ -1,18 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Sprint anim</title>
-        <link rel="stylesheet" href="style.css" />
-    </head>
-    <body>
-        <canvas id="canvas1"></canvas>
-        <img id="laser" src="assets/background/b3/PNG/Lasers/laserBlue09.png">
-        <img id="player" src="assets/sprint/shadow_dog.png">
-        <audio id="jump" src="assets/audio/mixkit-player-jumping-in-a-video-game-2043.wav"></audio>
-        <img id="background" src="assets/background/b2/dne0_0hph_210309.jpg">
-        <script type="module" src="script.js"></script>
-    </body>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sprint anim</title>
+    <link rel="stylesheet" href="style.css" />
+    <script type="module" src="script.js"></script>
+</head>
+
+<body>
+    <canvas id="canvas1"></canvas>
+    <img id="laser" src="assets/background/b3/PNG/Lasers/laserBlue09.png">
+    <img id="player" src="assets/sprint/shadow_dog.png">
+    <audio id="jump" src="assets/audio/mixkit-player-jumping-in-a-video-game-2043.wav"></audio>
+    <img id="background" src="assets/background/b2/dne0_0hph_210309.jpg">
+    <form id="myForm">
+        <label for="playerChat">Chat</label>
+        <input type="text" id="playerChat" name="playerChat"><br><br>
+        <input type="button" onclick="handleFormSubmit()" value="Submit Form">
+    </form>
+</body>
+
 </html>
