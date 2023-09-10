@@ -1,13 +1,13 @@
 import {Player} from './player.js';
 import {InputHandler} from './input.js';
 
+function handleFormSubmit(){
+    console.log('yo here')
+    alert('clicked man')
+    document.getElementById("myForm").submit();
+}
 
 window.addEventListener('load', ()=>{
-    function handleFormSubmit(){
-        console.log('yo here')
-        alert('clicked man')
-        document.getElementById("myForm").submit();
-    }
 
     const canvas = document.getElementById("canvas1");
     const ctx = canvas.getContext('2d');

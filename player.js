@@ -1,4 +1,4 @@
-import { Sitting, Running, Falling, Jumping } from "./playerStates.js";
+import { Sitting, Running, Falling, Jumping , Standing} from "./playerStates.js";
 import AudioHandler from "./audioHandler.js";
 export class Player {
     constructor(game) {
@@ -21,7 +21,7 @@ export class Player {
         this.maxSpeed = 10;
         this.image = document.getElementById('player'); // Images
         this.background = document.getElementById('background'); // States
-        this.states = [new Sitting(this), new Running(this), new Jumping(this), new Falling(this)]
+        this.states = [new Sitting(this), new Running(this), new Jumping(this), new Falling(this), new Standing(this)]
         this.currentState = this.states[0];
         this.currentState.enter()
         this.audioHandler = new AudioHandler()
@@ -30,6 +30,10 @@ export class Player {
     update(input, deltaTime) {
         this.currentState.handleInput(input);
         this.x += this.speed;
+        if (! (input.includes('d') || input.includes('a') || input.includes('w') || input.includes('s'))){
+           // Standing up  
+           this.setState(4);
+        }
         if (input.includes('d')) this.speed = this.maxSpeed;
         else if (input.includes('a')) this.speed = - this.maxSpeed;
         else this.speed = 0;
