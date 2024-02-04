@@ -15,6 +15,7 @@
 }
 
 #player,
+#player2,
 #layer1,
 #layer2,
 #layer3,
@@ -27,6 +28,6 @@
     display: none;
 }
 
-#background {
+#backgroundScenary {
     display: none;
 }

@@ -1,4 +1,4 @@
-import {Player} from './player.js';
+import {Player, Player2} from './player.js';
 import { Background } from './layers.js';
 import {InputHandler} from './input.js';
 
@@ -22,15 +22,18 @@ window.addEventListener('load', ()=>{
             this.background = new Background(this);
             this.groundMargin = 50;
             this.player = new Player(this);
+            this.player2 = new Player2(this);
             this.input = new InputHandler();
         }
         update(deltaTime){
             this.background.update()
             this.player.update(this.input.keys, deltaTime)
+            this.player2.update(this.input.keys, deltaTime)
         }
         draw(context){
             this.background.draw(context)
             this.player.draw(context);
+            this.player2.draw(context);
         }
     }
 
