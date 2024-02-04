@@ -1,4 +1,4 @@
-import { Sitting, Running, Falling, Jumping , Standing} from "./playerStates.js";
+import { Sitting, Running, Falling, Jumping, Standing } from "./playerStates.js";
 import AudioHandler from "./audioHandler.js";
 export class Player {
     constructor(game) {
@@ -10,10 +10,10 @@ export class Player {
         this.weight = 1;
         this.vy = 0;
         this.x = 0;
-        this.y = this.game.height - this.height;
+        this.y = this.game.height - this.height - this.game.groundMargin;
         this.playerFrameX = 0 // Frames
         this.playerFrameY = 5
-        this.maxFrame = 5;
+        this.maxFrame;
         this.fps = 20;  // FPS
         this.frameInterval = 1000 / this.fps;
         this.frameTimer = 0;
@@ -30,31 +30,36 @@ export class Player {
     update(input, deltaTime) {
         this.currentState.handleInput(input);
         this.x += this.speed;
-        if (! (input.includes('d') || input.includes('a') || input.includes('w') || input.includes('s'))){
-           // Standing up  
-           this.setState(4);
-        }
+        // When nothing happens
+        // if (!(input.includes('d') || input.includes('a') || input.includes('w') || input.includes('s'))) {
+        //     this.setState(0);
+        // }
         if (input.includes('d')) this.speed = this.maxSpeed;
         else if (input.includes('a')) this.speed = - this.maxSpeed;
         else this.speed = 0;
+        // Boundary
         if (this.x < 0) this.x = 0;
-        if (this.x > this.game.width - this.width) this.x = this.game.width - this.width;
         // vertical
+        if (this.x > this.game.width - this.width) this.x = this.game.width - this.width;
         this.y += this.vy;
         if (!this.onGround()) this.vy += this.weight;
         else this.vy = 0;
         // animation
         if (this.frameTimer > this.frameInterval) {
             this.frameTimer = 0;
-            if (this.playerFrameX < this.maxFrame) this.playerFrameX++;
-            else this.playerFrameX = 0;
+            if (this.playerFrameX < this.maxFrame) {
+                this.playerFrameX++;
+            }
+            else {
+                this.playerFrameX = 0;
+            }
         } else {
             this.frameTimer += deltaTime;
         }
     }
 
     onGround() {
-        return this.y >= this.game.height - this.height;
+        return this.y >= this.game.height - this.height - this.game.groundMargin;
     }
 
     draw(context) {

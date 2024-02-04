@@ -3,7 +3,7 @@ const states = {
     'RUNNING': 1,
     'JUMPING': 2,
     'FALLING': 3,
-    'STANDING':4
+    'STANDING': 4
 }
 const playerWidth = 575
 const playerHeight = 523
@@ -22,7 +22,7 @@ export class Falling extends State {
     // Handle All variations in SITTING STATE
     enter() {
         this.player.playerFrameY = 2;
-        this.player.playerFrameX=0;
+        this.player.playerFrameX = 0;
         this.player.maxFrame = 6;
     }
 
@@ -39,7 +39,7 @@ export class Jumping extends State {
     }
     // Handle All variations in SITTING STATE
     enter() {
-        this.player.playerFrameX=0;
+        this.player.playerFrameX = 0;
         if (this.player.onGround()) this.player.vy -= 27;
         this.player.playerFrameY = 1;
         this.player.maxFrame = 6;
@@ -59,7 +59,7 @@ export class Running extends State {
     // Handle All variations in SITTING STATE
     enter() {
         this.player.playerFrameY = 3;
-        this.player.playerFrameX=0;
+        this.player.playerFrameX = 0;
         this.player.maxFrame = 8;
     }
 
@@ -67,9 +67,12 @@ export class Running extends State {
         if (input.includes('w')) {
             this.player.setState(states.JUMPING);
         }
-        if (input.includes('s')) {
+        else if (input.includes('s')) {
             this.player.setState(states.SITTING); // 1 refers to running state
         }
+        // else{ // Stanidng
+        //     this.player.setState(states.STANDING);
+        // }
     }
 }
 export class Sitting extends State {
@@ -80,7 +83,7 @@ export class Sitting extends State {
 
     enter() {
         this.player.playerFrameY = 5;
-        this.player.playerFrameX=0;
+        this.player.playerFrameX = 0;
         this.player.maxFrame = 4;
     }
 
@@ -100,7 +103,7 @@ export class Standing extends State {
 
     enter() {
         this.player.playerFrameY = 0;
-        this.player.playerFrameX=0;
+        this.player.playerFrameX = 0;
         this.player.maxFrame = 6;
     }
 
