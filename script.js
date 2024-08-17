@@ -1,6 +1,6 @@
-import {Player, Player2} from './player.js';
-import { Background } from './layers.js';
-import {InputHandler} from './input.js';
+import {Player, Player2} from './player_stuff/player.js';
+import { Background } from './game_stuff/layers.js';
+import {InputHandler} from './game_stuff/input.js';
 
 function handleFormSubmit(){
     console.log('yo here')
@@ -23,12 +23,13 @@ window.addEventListener('load', ()=>{
             this.groundMargin = 50;
             this.player = new Player(this);
             this.player2 = new Player2(this);
-            this.input = new InputHandler();
+            this.input_p1 = new InputHandler(this.player.movement_key_override);
+            this.input_p2 = new InputHandler(this.player2.movement_key_override);
         }
         update(deltaTime){
             this.background.update()
-            this.player.update(this.input.keys, deltaTime)
-            this.player2.update(this.input.keys, deltaTime)
+            this.player.update(this.input_p1.keys, deltaTime)
+            this.player2.update(this.input_p2.keys, deltaTime)
         }
         draw(context){
             this.background.draw(context)

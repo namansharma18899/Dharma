@@ -12,6 +12,7 @@ class State {
     constructor(state) {
         this.state = state
     }
+
 }
 
 export class Falling extends State {
@@ -64,10 +65,10 @@ export class Running extends State {
     }
 
     handleInput(input) {
-        if (input.includes('w')) {
+        if (input.includes(this.player.movement_key_override['up'])) {
             this.player.setState(states.JUMPING);
         }
-        else if (input.includes('s')) {
+        else if (input.includes(this.player.movement_key_override['down'])) {
             this.player.setState(states.SITTING); // 1 refers to running state
         }
         // else{ // Stanidng
@@ -89,10 +90,9 @@ export class Sitting extends State {
 
     handleInput(input) {
         // console.log(`input > ${input}`)
-        if (input.includes('d') || input.includes('a')) {
+        if (input.includes(this.player.movement_key_override['right']) || input.includes(this.player.movement_key_override['left'])) {
             this.player.setState(states.RUNNING); // 1 refers to running state
         }
-
     }
 }
 export class Standing extends State {
@@ -109,13 +109,13 @@ export class Standing extends State {
 
     handleInput(input) {
         // console.log(`input > ${input}`)
-        if (input.includes('d') || input.includes('a')) {
+        if (input.includes(this.player.movement_key_override['right']) || input.includes(this.player.movement_key_override['left'])) {
             this.player.setState(states.RUNNING); // 1 refers to running state
         }
-        else if (input.includes('w')) {
+        else if (input.includes(this.player.movement_key_override['up'])) {
             this.player.setState(states.JUMPING);
         }
-        else if (input.includes('s')) {
+        else if (input.includes(this.player.movement_key_override['down'])) {
             this.player.setState(states.SITTING); // 1 refers to running state
         }
 
