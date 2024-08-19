@@ -2,7 +2,7 @@ export class InputHandler {
     constructor(movement_key_override){
         this.keys = []
         window.addEventListener('keydown', (e)=>{
-            console.log("preseed -> ",this.keys, movement_key_override['up'])
+            // console.log("preseed -> ",this.keys, movement_key_override['up'])
             if ((e.key == movement_key_override['up'] ||
                  e.key == movement_key_override['left'] ||
                  e.key == movement_key_override['down'] || 

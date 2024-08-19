@@ -3,7 +3,8 @@ const states = {
     'P2RUNNING': 1,
     'P2JUMPING': 2,
     'P2FALLING': 3,
-    'P2STANDING': 4
+    'P2STANDING': 4,
+    'P2SHOOTARROW': 5
 }
 const playerWidth = 120
 const playerHeight = 120
@@ -62,7 +63,7 @@ export class P2Running extends State {
         this.player.playerFrameY = 0;
         this.player.playerFrameX = 0;
         this.fps = 60; 
-        this.player.maxFrame = 8;
+        this.player.maxFrame = 7;
     }
 
     handleInput(input) {
@@ -99,6 +100,41 @@ export class P2Sitting extends State {
         }
     }
 }
+export class P2ShootArrow extends State {
+    constructor(player) {
+        super('P2SHOOTARROW');
+        this.player = player
+    }
+
+    enter() {
+        console.log('Inside shoot')
+        this.player.image = document.getElementById('player2_shot');
+        this.player.playerFrameY = 0;
+        this.player.playerFrameX = 0;
+        this.player.maxFrame = 13;
+        this.player.block_transition = true
+    }
+
+    handleInput(input) {
+        if (this.block_transition == true){
+            if (this.player.playerFrameX==this.maxFrame){
+                this.block_transition=false
+                this.player.setState(states.P2RUNNING); // 1 refers to running state    
+            }
+        }
+        if (input.includes(this.player.movement_key_override['right']) || input.includes(this.player.movement_key_override['left'])) {
+            this.player.setState(states.P2RUNNING); // 1 refers to running state
+        }
+        else if (input.includes(this.player.movement_key_override['up'])) {
+            this.player.setState(states.P2JUMPING);
+        }
+        else if (input.includes(this.player.movement_key_override['down'])) {
+            this.player.setState(states.P2SITTING); // 1 refers to running state
+        }
+
+    }
+}
+
 export class P2Standing extends State {
     constructor(player) {
         super('P2STANDING');
@@ -109,19 +145,23 @@ export class P2Standing extends State {
         this.player.image = document.getElementById('player2');
         this.player.playerFrameY = 0;
         this.player.playerFrameX = 0;
-        this.player.maxFrame = 4;
+        this.player.maxFrame = 3;
     }
 
     handleInput(input) {
         // console.log(`input > ${input}`)
         if (input.includes(this.player.movement_key_override['right']) || input.includes(this.player.movement_key_override['left'])) {
             this.player.setState(states.P2RUNNING); // 1 refers to running state
+            return
         }
         else if (input.includes(this.player.movement_key_override['up'])) {
             this.player.setState(states.P2JUMPING);
         }
         else if (input.includes(this.player.movement_key_override['down'])) {
             this.player.setState(states.P2SITTING); // 1 refers to running state
+        }
+        else if (input.includes(this.player.movement_key_override['special'])) {
+            this.player.setState(states.P2SHOOTARROW); // 1 refers to running state
         }
 
     }

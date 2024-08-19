@@ -14,7 +14,7 @@
     max-height: 100%;
 }
 
-#player,#player2,#player2_running,#layer1,#layer2,#layer3,#layer4,#layer5 {
+#player,#player2, #player2_idle,#player2_shot,#player2_running,#layer1,#layer2,#layer3,#layer4,#layer5 {
     display: none;
 }
 
