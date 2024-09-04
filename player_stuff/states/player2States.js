@@ -160,9 +160,9 @@ export class P2Standing extends State {
         else if (input.includes(this.player.movement_key_override['down'])) {
             this.player.setState(states.P2SITTING); // 1 refers to running state
         }
-        else if (input.includes(this.player.movement_key_override['special'])) {
-            this.player.setState(states.P2SHOOTARROW); // 1 refers to running state
-        }
+        // else if (input.includes(this.player.movement_key_override['special'])) {
+        //     this.player.setState(states.P2SHOOTARROW); // 1 refers to running state
+        // }
 
     }
 }

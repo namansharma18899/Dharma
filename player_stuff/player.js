@@ -112,7 +112,7 @@ export class Player2 {
         this.speed = 0; // Speed
         this.maxSpeed = 10;
         this.background = document.getElementById('backgroundScenary'); // States
-        this.states = [new P2Standing(this), new P2Running(this), new P2Jumping(this), new P2Falling(this), new P2tShootArrow(this)];
+        this.states = [new P2Standing(this), new P2Running(this), new P2Jumping(this), new P2Falling(this)];
         this.currentState = this.states[0];
         this.currentState.enter();
         this.audioHandler = new AudioHandler();
