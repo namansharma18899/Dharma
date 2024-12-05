@@ -1,10 +1,9 @@
 const states = {
-    'P2SITTING': 0,
-    'P2RUNNING': 1,
-    'P2JUMPING': 2,
-    'P2FALLING': 3,
-    'P2STANDING': 4,
-    'P2SHOOTARROW': 5
+    'P2RUNNING': 0,
+    'P2JUMPING': 1,
+    'P2FALLING': 2,
+    'P2STANDING': 3,
+    'P2SHOOTARROW': 4
 }
 const playerWidth = 120
 const playerHeight = 120
@@ -94,7 +93,6 @@ export class P2Sitting extends State {
     }
 
     handleInput(input) {
-        // console.log(`input > ${input}`)
         if (input.includes(this.player.movement_key_override['right']) || input.includes(this.player.movement_key_override['left'])) {
             this.player.setState(states.P2RUNNING); // 1 refers to running state
         }
@@ -107,7 +105,6 @@ export class P2ShootArrow extends State {
     }
 
     enter() {
-        console.log('Inside shoot')
         this.player.image = document.getElementById('player2_shot');
         this.player.playerFrameY = 0;
         this.player.playerFrameX = 0;
@@ -149,7 +146,6 @@ export class P2Standing extends State {
     }
 
     handleInput(input) {
-        // console.log(`input > ${input}`)
         if (input.includes(this.player.movement_key_override['right']) || input.includes(this.player.movement_key_override['left'])) {
             this.player.setState(states.P2RUNNING); // 1 refers to running state
             return
@@ -160,9 +156,9 @@ export class P2Standing extends State {
         else if (input.includes(this.player.movement_key_override['down'])) {
             this.player.setState(states.P2SITTING); // 1 refers to running state
         }
-        // else if (input.includes(this.player.movement_key_override['special'])) {
-        //     this.player.setState(states.P2SHOOTARROW); // 1 refers to running state
-        // }
+        else if (input.includes(this.player.movement_key_override['special'])) {
+            this.player.setState(states.P2SHOOTARROW); // 1 refers to running state
+        }
 
     }
 }

@@ -29,7 +29,7 @@ export class Player {
         this.maxSpeed = 10;
         this.image = document.getElementById('player'); // Images
         this.background = document.getElementById('backgroundScenary'); // States
-        this.states = [new Sitting(this), new Running(this), new Jumping(this), new Falling(this), new Standing(this), new P2ShootArrow(this)]
+        this.states = [new Sitting(this), new Running(this), new Jumping(this), new Falling(this), new Standing(this)]
         this.currentState = this.states[0];
         this.currentState.enter()
         this.audioHandler = new AudioHandler()
@@ -112,17 +112,15 @@ export class Player2 {
         this.speed = 0; // Speed
         this.maxSpeed = 10;
         this.background = document.getElementById('backgroundScenary'); // States
-        this.states = [new P2Standing(this), new P2Running(this), new P2Jumping(this), new P2Falling(this)];
+        this.states = [new P2Standing(this), new P2Running(this), new P2Jumping(this), new P2Falling(this), new P2ShootArrow(this)];
         this.currentState = this.states[0];
         this.currentState.enter();
         this.audioHandler = new AudioHandler();
     }
 
     update(input, deltaTime) {
-        // console.log('Preseed -> ', input)
         this.currentState.handleInput(input);
         this.x += this.speed;
-        // console.log('curr -> ', this.currentState.state)
         if (input.includes(this.movement_key_override['right'])) this.speed = this.maxSpeed;
         else if (input.includes(this.movement_key_override['left'])) this.speed = -this.maxSpeed;
         else this.speed = 0;
@@ -134,7 +132,6 @@ export class Player2 {
         if (!this.onGround()) this.vy += this.weight;
         else this.vy = 0;
         // Animation frame control
-        // console.log('Frame Number -> ', this.playerFrameX)
         if (this.frameTimer > this.frameInterval) {
             this.frameTimer = 0;
             if (this.playerFrameX < this.maxFrame) {
