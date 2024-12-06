@@ -17,7 +17,7 @@ export class Enemy {
         this.vy = 0;
         this.x = 0;
         // this.y = this.game.height - this.height - (this.game.groundMargin);
-        this.y = 10
+        this.y = 50
         this.playerFrameX = 0 // Frames
         this.playerFrameY = 10 // IDK what's this...HELP ME ??
         this.maxFrame;
@@ -31,18 +31,27 @@ export class Enemy {
         this.states = [new FLYING(this)]
         this.currentState = this.states[0];
         this.currentState.enter()
-        // this.audioHandler = new AudioHandler()
+        // Wave movement parameters
+        this.timeElapsed = 0;
+        this.waveAmplitude = 1.8;  // How high/low the object moves
+        this.waveFrequency = 0.050;  // Speed of the wave
+    }
+
+    update_flight(){
+        this.x += this.speed;
+        this.timeElapsed++;
+        this.y = this.y + Math.sin(this.timeElapsed * this.waveFrequency) * this.waveAmplitude;
     }
 
     update(input, deltaTime) {
         this.currentState.handleInput(input);
-        console.log('X Before -> -> ', this.x, this.speed)
-        this.x += this.speed;
-        console.log('After X -> -> ', this.x,  this.speed)
+        this.update_flight()
+
         // When nothing happens
         // if (!(input.includes(this.movement_key_override['right']) || input.includes(this.movement_key_override['left']) || input.includes('w') || input.includes('s'))) {
         //     this.setState(0);
         // }
+        
         if (input.includes(this.movement_key_override['right'])) this.speed = this.maxSpeed;
         else if (input.includes(this.movement_key_override['left'])) this.speed = - this.maxSpeed;
         // else this.speed = 0; // This is commented because we want to move our dragon
@@ -52,8 +61,12 @@ export class Enemy {
             this.x = 0;
         }
         // vertical
-        if (this.x > this.game.width - this.width) this.x = this.game.width - this.width;
-        this.y += this.vy;
+        if (this.x > this.game.width - this.width) {
+            // this.x = this.game.width - this.width;
+            this.x = 0
+            // this.
+        }
+        // this.y += this.vy;
         if (!this.onGround()) this.vy += this.weight;
         else this.vy = 0;
         // animation
@@ -75,7 +88,7 @@ export class Enemy {
     }
 
     draw(context) {
-        context.drawImage(this.image, this.playerFrameX * this.playerWidth, this.playerFrameY * this.playerHeight, this.playerWidth, this.playerHeight, this.x, 20, this.width, this.height);
+        context.drawImage(this.image, this.playerFrameX * this.playerWidth, this.playerFrameY * this.playerHeight, this.playerWidth, this.playerHeight, this.x, this.y, this.width, this.height);
         // context.drawImage(this.background,0,0,this.game.width, this.game.height-160); 
     }
     setState(state) {
