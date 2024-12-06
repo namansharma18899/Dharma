@@ -1,4 +1,5 @@
 import {Player, Player2} from './player_stuff/player.js';
+import { Enemy } from './enemy_stuff/enemy.js';
 import { Background } from './game_stuff/layers.js';
 import {InputHandler} from './game_stuff/input.js';
 
@@ -21,20 +22,23 @@ window.addEventListener('load', ()=>{
             this.speed = 3;
             this.background = new Background(this);
             this.groundMargin = 50;
-            this.player = new Player(this);
-            this.player2 = new Player2(this);
-            this.input_p1 = new InputHandler(this.player.movement_key_override);
-            this.input_p2 = new InputHandler(this.player2.movement_key_override);
+            this.P1 = new Player(this);
+            this.P2 = new Player2(this);
+            this.DragonEnemy = new Enemy(this);
+            this.input_p1 = new InputHandler(this.P1.movement_key_override);
+            this.input_p2 = new InputHandler(this.P2.movement_key_override);
         }
         update(deltaTime){
             this.background.update()
-            this.player.update(this.input_p1.keys, deltaTime)
-            this.player2.update(this.input_p2.keys, deltaTime)
+            this.P1.update(this.input_p1.keys, deltaTime)
+            this.P2.update(this.input_p2.keys, deltaTime)
+            this.DragonEnemy.update(this.input_p1.keys, deltaTime)
         }
         draw(context){
             this.background.draw(context)
-            this.player.draw(context);
-            this.player2.draw(context);
+            this.P1.draw(context);
+            this.P2.draw(context);
+            this.DragonEnemy.draw(context);
         }
     }
 
