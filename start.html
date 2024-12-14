@@ -111,7 +111,7 @@
         #player1-finalize, #player2-finalize {
             margin-top: 20px;
             padding: 10px 20px;
-            background-color: #4CAF50;
+            background-color: grey;
             color: white;
             border: none;
             border-radius: 5px;
@@ -243,12 +243,14 @@
         document.getElementById('player1-finalize').addEventListener('click', () => {
             player1Finalized = true;
             document.getElementById('player1-finalize').disabled = true;
+            document.getElementById('player1-finalize').style.backgroundColor = '#4CAF50';
             checkAllFinalized();
         });
 
         document.getElementById('player2-finalize').addEventListener('click', () => {
             player2Finalized = true;
             document.getElementById('player2-finalize').disabled = true;
+            document.getElementById('player2-finalize').style.backgroundColor = '#4CAF50';
             checkAllFinalized();
         });
 
