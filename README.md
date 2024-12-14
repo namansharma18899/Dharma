@@ -1,5 +1,5 @@
 <div align='center'>
-<img  src="https://github.com/namansharma18899/Dharma/blob/master/assets/newlogo.png"  height=250px>
+<img  src="https://github.com/namansharma18899/Dharma/blob/main/assets/newlogo.png"  height=250px>
 <hr>
 
 ### **Dharma: An Indie 1v1 game in development 👨🏻‍💻**
