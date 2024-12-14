@@ -1,24 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <title>Character Selection</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide-dynamic/0.263.0/font/lucide.min.css" rel="stylesheet">
     <style>
-        body,
-        html {
+        body, html {
             margin: 0;
             padding: 0;
             height: 100%;
             font-family: Arial, sans-serif;
         }
-
         #game-container {
             display: flex;
             height: 100vh;
         }
-
         .player-section {
             flex: 1;
             display: flex;
@@ -31,22 +26,18 @@
             padding: 20px;
             box-sizing: border-box;
         }
-
         #player1 {
             background-color: #e6f2ff;
         }
-
         #player2 {
             background-color: #fff2e6;
         }
-
         .page-title {
             font-size: 24px;
             font-weight: bold;
             margin-bottom: 15px;
             text-align: center;
         }
-
         .character-container {
             display: flex;
             align-items: center;
@@ -54,13 +45,11 @@
             width: 100%;
             padding: 0 20px;
         }
-
         .character-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-
         .small-character-photo {
             width: 100px;
             height: 100px;
@@ -68,9 +57,8 @@
             background-position: center;
             border-radius: 50%;
             margin-bottom: 10px;
-            border: 3px solid rgba(0, 0, 0, 0.2);
+            border: 3px solid rgba(0,0,0,0.2);
         }
-
         .character-image {
             width: 300px;
             height: 400px;
@@ -78,23 +66,20 @@
             background-repeat: no-repeat;
             background-position: center;
         }
-
-        .navigation-icon {
+        .navigation-arrow {
             cursor: pointer;
             font-size: 48px;
-            color: rgba(0, 0, 0, 0.7);
+            color: rgba(0,0,0,0.7);
+            user-select: none;
             transition: color 0.3s ease;
         }
-
-        .navigation-icon:hover {
-            color: rgba(0, 0, 0, 1);
+        .navigation-arrow:hover {
+            color: rgba(0,0,0,1);
         }
-
         .character-details {
             text-align: center;
             margin-top: 20px;
         }
-
         #finalizeModal {
             position: fixed;
             top: 0;
@@ -105,17 +90,25 @@
             display: none;
             justify-content: center;
             align-items: center;
+            /* z-index: 9999;
+            transition: opacity 0.3s ease, visibility 0s 0.3s;
+            visibility: hidden; 
+            opacity: 0; 
+            */
         }
-
         .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
         }
 
-        #player1-finalize,
-        #player2-finalize {
+        
+
+        #player1-finalize, #player2-finalize {
             margin-top: 20px;
             padding: 10px 20px;
             background-color: #4CAF50;
@@ -126,13 +119,12 @@
         }
     </style>
 </head>
-
 <body>
     <div id="game-container">
         <div id="player1" class="player-section">
             <div class="page-title">Player 1 Character Selection</div>
             <div class="character-container">
-                <i id="player1-prev" class="lucide navigation-icon" data-lucide="chevron-left"></i>
+                <div id="player1-prev" class="navigation-arrow">◀</div>
                 <div class="character-wrapper">
                     <div id="player1-small-photo" class="small-character-photo"></div>
                     <div id="player1-character-image" class="character-image"></div>
@@ -141,15 +133,15 @@
                         <p id="player1-character-description">A brave warrior</p>
                     </div>
                 </div>
-                <i id="player1-next" class="lucide navigation-icon" data-lucide="chevron-right"></i>
+                <div id="player1-next" class="navigation-arrow">▶</div>
             </div>
             <button id="player1-finalize">Finalize Character</button>
         </div>
-
+        
         <div id="player2" class="player-section">
             <div class="page-title">Player 2 Character Selection</div>
             <div class="character-container">
-                <i id="player2-prev" class="lucide navigation-icon" data-lucide="chevron-left"></i>
+                <div id="player2-prev" class="navigation-arrow">◀</div>
                 <div class="character-wrapper">
                     <div id="player2-small-photo" class="small-character-photo"></div>
                     <div id="player2-character-image" class="character-image"></div>
@@ -158,7 +150,7 @@
                         <p id="player2-character-description">A skilled ranged fighter</p>
                     </div>
                 </div>
-                <i id="player2-next" class="lucide navigation-icon" data-lucide="chevron-right"></i>
+                <div id="player2-next" class="navigation-arrow">▶</div>
             </div>
             <button id="player2-finalize">Finalize Character</button>
         </div>
@@ -172,53 +164,53 @@
         </div>
     </div>
 
-    <script src="https://unpkg.com/browse/lucide@0.330.0/dist/umd/lucide.js"></script>
     <script>
+        // Character data with image URLs
         const characters = [
-            {
-                name: 'Knight',
+            { 
+                name: 'Knight', 
                 description: 'A brave warrior',
-                image: 'warrior.jpg',
-                smallImage: 'warrior.jpg'
+                image: 'assets/start_screen/warrior.jpg',
+                smallImage: 'assets/start_screen/warrior.jpg'
             },
-            {
-                name: 'Archer',
+            { 
+                name: 'Archer', 
                 description: 'A skilled ranged fighter',
-                image: 'archer.jpg',
-                smallImage: 'archer.jpg'
+                image: 'assets/start_screen/archer.jpg',
+                smallImage: 'assets/start_screen/archer.jpg'
             },
-            {
-                name: 'Mage',
+            { 
+                name: 'Mage', 
                 description: 'A powerful spell caster',
-                image: 'archer.jpg',
-                smallImage: 'archer.jpg'
+                image: 'assets/start_screen/wizard.jpg',
+                smallImage: 'assets/start_screen/wizard.jpg'
             },
-            {
-                name: 'Rogue',
+            { 
+                name: 'Rogue', 
                 description: 'A stealthy assassin',
-                image: 'archer.jpg',
-                smallImage: 'archer.jpg'
+                image: 'assets/start_screen/assasin.jpg',
+                smallImage: 'assets/start_screen/assasin.jpg'
             }
         ];
         function getRndInteger(min, max) {
-  return Math.floor(Math.random() * (max - min) ) + min;
-}
+        return Math.floor(Math.random() * (max - min) ) + min;
+        }
 
         // Player Character Selector Class
         class PlayerCharacterSelector {
             constructor(playerId) {
                 this.playerId = playerId;
-                this.currentCharacterIndex = getRndInteger(0,characters.length-1)
+                this.currentCharacterIndex = getRndInteger(0, characters.length-1)
                 this.characterImage = document.getElementById(`${playerId}-character-image`);
                 this.smallPhoto = document.getElementById(`${playerId}-small-photo`);
                 this.characterName = document.getElementById(`${playerId}-character-name`);
                 this.characterDescription = document.getElementById(`${playerId}-character-description`);
                 this.prevButton = document.getElementById(`${playerId}-prev`);
                 this.nextButton = document.getElementById(`${playerId}-next`);
-
+                
                 this.prevButton.addEventListener('click', () => this.changeCharacter(-1));
                 this.nextButton.addEventListener('click', () => this.changeCharacter(1));
-
+                
                 this.updateDisplay();
             }
 
@@ -228,11 +220,8 @@
             }
 
             updateDisplay() {
-                console.log('char asdfsdf')
                 const character = characters[this.currentCharacterIndex];
-                console.log('char -> ', character)
                 this.characterImage.style.backgroundImage = `url('${character.image}')`;
-                console.log('cimag ->', this.characterImage)
                 this.smallPhoto.style.backgroundImage = `url('${character.smallImage}')`;
                 this.characterName.textContent = character.name;
                 this.characterDescription.textContent = character.description;
@@ -268,19 +257,17 @@
                 const player1Character = player1Selector.getSelectedCharacter();
                 const player2Character = player2Selector.getSelectedCharacter();
 
-                document.getElementById('selected-characters').textContent =
+                document.getElementById('selected-characters').textContent = 
                     `Player 1: ${player1Character.name}, Player 2: ${player2Character.name}`;
-
+                
                 document.getElementById('finalizeModal').style.display = 'flex';
             }
         }
 
         document.getElementById('start-game').addEventListener('click', () => {
-            // Here you would start your actual game
-            alert('Game Starting!');
             document.getElementById('finalizeModal').style.display = 'none';
+            window.location.href='index.html'
         });
-    </script>
+    </script>   
 </body>
-
 </html>
