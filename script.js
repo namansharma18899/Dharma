@@ -1,5 +1,6 @@
 import {Player, Player2} from './player_stuff/player.js';
 
+
 import { Enemy } from './enemy_stuff/enemy.js';
 import { Background } from './game_stuff/layers.js';
 import {InputHandler} from './game_stuff/input.js';
