@@ -1,164 +1,124 @@
-const states = {
-    'P2RUNNING': 0,
-    'P2JUMPING': 1,
-    'P2FALLING': 2,
-    'P2STANDING': 3,
-    'P2SHOOTARROW': 4
-}
-const playerWidth = 120
-const playerHeight = 120
+import { State } from '../../game_stuff/state.js';
 
-class State {
-    constructor(state) {
-        this.state = state
+export const Player2State = Object.freeze({
+    STANDING: 0,
+    RUNNING: 1,
+    JUMPING: 2,
+    FALLING: 3,
+    SHOOT_ARROW: 4,
+});
+
+export class P2Standing extends State {
+    constructor(player) {
+        super('P2_STANDING', player);
+    }
+
+    enter() {
+        this.entity.image = document.getElementById('player2');
+        this.entity.frameY = 0;
+        this.entity.frameX = 0;
+        this.entity.maxFrame = 3;
+    }
+
+    handleInput(input) {
+        const { right, left, up, special } = this.entity.keyBindings;
+        if (input.includes(right) || input.includes(left)) {
+            this.entity.setState(Player2State.RUNNING);
+        } else if (input.includes(up) && this.entity.stamina >= 15) {
+            this.entity.setState(Player2State.JUMPING);
+        } else if (input.includes(special)) {
+            this.entity.setState(Player2State.SHOOT_ARROW);
+        }
+    }
+}
+
+export class P2Running extends State {
+    constructor(player) {
+        super('P2_RUNNING', player);
+    }
+
+    enter() {
+        this.entity.image = document.getElementById('player2_running');
+        this.entity.frameY = 0;
+        this.entity.frameX = 0;
+        this.entity.maxFrame = 7;
+    }
+
+    handleInput(input) {
+        const { right, left, up } = this.entity.keyBindings;
+        if (!(input.includes(left) || input.includes(right))) {
+            this.entity.setState(Player2State.STANDING);
+        }
+        if (input.includes(up) && this.entity.stamina >= 15) {
+            this.entity.setState(Player2State.JUMPING);
+        }
+    }
+}
+
+export class P2Jumping extends State {
+    constructor(player) {
+        super('P2_JUMPING', player);
+    }
+
+    enter() {
+        this.entity.image = document.getElementById('player2_jump');
+        this.entity.frameX = 0;
+        this.entity.frameY = 0;
+        this.entity.maxFrame = 9;
+        if (this.entity.onGround()) {
+            this.entity.vy -= 27 * this.entity.staminaFactor;
+            this.entity.stamina -= 15;
+        }
+    }
+
+    handleInput(_input) {
+        if (this.entity.vy > this.entity.weight) {
+            this.entity.setState(Player2State.FALLING);
+        }
     }
 }
 
 export class P2Falling extends State {
     constructor(player) {
-        super('P2FALLING');
-        this.player = player
-    }
-    // Handle All variations in SITTING STATE
-    enter() {
-        this.player.playerFrameY = 2;
-        this.player.playerFrameX = 0;
-        this.player.maxFrame = 6;
-    }
-
-    handleInput(input) {
-        if (this.player.onGround()) {
-            this.player.setState(states.P2RUNNING);
-        }
-    }
-}
-export class P2Jumping extends State {
-    constructor(player) {
-        super('P2JUMPING');
-        this.player = player
-    }
-    // Handle All variations in SITTING STATE
-    enter() {
-        this.player.playerFrameX = 0;
-        if (this.player.onGround()) this.player.vy -= 27;
-        this.player.playerFrameY = 1;
-        this.player.maxFrame = 6;
-    }
-
-    handleInput(input) {
-        if (this.player.vy > this.player.weight) {
-            this.player.setState(states.P2FALLING);
-        }
-    }
-}
-export class P2Running extends State {
-    constructor(player) {
-        super('P2RUNNING');
-        this.player = player
-    }
-    // Handle All variations in SITTING STATE
-    enter() {
-        this.player.image = document.getElementById('player2_running'); // Images
-        this.player.playerFrameY = 0;
-        this.player.playerFrameX = 0;
-        this.fps = 60; 
-        this.player.maxFrame = 7;
-    }
-
-    handleInput(input) {
-        if (! (input.includes(this.player.movement_key_override['left']) || (input.includes(this.player.movement_key_override['right'])))) {
-            this.player.setState(states.P2STANDING);
-        }
-        if (input.includes(this.player.movement_key_override['up'])) {
-            this.player.setState(states.P2JUMPING);
-        }
-        else if (input.includes(this.player.movement_key_override['down'])) {
-            this.player.setState(states.P2SITTING); // 1 refers to running state
-        }
-        // else{ // Stanidng
-        //     this.player.setState(states.STANDING);
-        // }
-    }
-}
-export class P2Sitting extends State {
-    constructor(player) {
-        super('P2SITTING');
-        this.player = player
+        super('P2_FALLING', player);
     }
 
     enter() {
-        this.player.playerFrameY = 0;
-        this.player.playerFrameX = 0;
-        this.player.maxFrame = 4;
+        this.entity.image = document.getElementById('player2_jump');
+        this.entity.frameX = 0;
+        this.entity.frameY = 0;
+        this.entity.maxFrame = 9;
     }
 
-    handleInput(input) {
-        if (input.includes(this.player.movement_key_override['right']) || input.includes(this.player.movement_key_override['left'])) {
-            this.player.setState(states.P2RUNNING); // 1 refers to running state
+    handleInput(_input) {
+        if (this.entity.onGround()) {
+            this.entity.setState(Player2State.RUNNING);
         }
     }
 }
+
 export class P2ShootArrow extends State {
     constructor(player) {
-        super('P2SHOOTARROW');
-        this.player = player
+        super('P2_SHOOT_ARROW', player);
     }
 
     enter() {
-        this.player.image = document.getElementById('player2_shot');
-        this.player.playerFrameY = 0;
-        this.player.playerFrameX = 0;
-        this.player.maxFrame = 13;
-        this.player.block_transition = true
+        this.entity.image = document.getElementById('player2_shot');
+        this.entity.frameY = 0;
+        this.entity.frameX = 0;
+        this.entity.maxFrame = 13;
     }
 
     handleInput(input) {
-        if (this.block_transition == true){
-            if (this.player.playerFrameX==this.maxFrame){
-                this.block_transition=false
-                this.player.setState(states.P2RUNNING); // 1 refers to running state    
-            }
+        if (this.entity.frameX >= this.entity.maxFrame) {
+            this.entity.setState(Player2State.STANDING);
+            return;
         }
-        if (input.includes(this.player.movement_key_override['right']) || input.includes(this.player.movement_key_override['left'])) {
-            this.player.setState(states.P2RUNNING); // 1 refers to running state
+        const { right, left, up } = this.entity.keyBindings;
+        if (input.includes(right) || input.includes(left)) {
+            this.entity.setState(Player2State.RUNNING);
+        } else if (input.includes(up) && this.entity.stamina >= 15) {
+            this.entity.setState(Player2State.JUMPING);
         }
-        else if (input.includes(this.player.movement_key_override['up'])) {
-            this.player.setState(states.P2JUMPING);
-        }
-        else if (input.includes(this.player.movement_key_override['down'])) {
-            this.player.setState(states.P2SITTING); // 1 refers to running state
-        }
-
-    }
-}
-
-export class P2Standing extends State {
-    constructor(player) {
-        super('P2STANDING');
-        this.player = player
-    }
-
-    enter() {
-        this.player.image = document.getElementById('player2');
-        this.player.playerFrameY = 0;
-        this.player.playerFrameX = 0;
-        this.player.maxFrame = 3;
-    }
-
-    handleInput(input) {
-        if (input.includes(this.player.movement_key_override['right']) || input.includes(this.player.movement_key_override['left'])) {
-            this.player.setState(states.P2RUNNING); // 1 refers to running state
-            return
-        }
-        else if (input.includes(this.player.movement_key_override['up'])) {
-            this.player.setState(states.P2JUMPING);
-        }
-        else if (input.includes(this.player.movement_key_override['down'])) {
-            this.player.setState(states.P2SITTING); // 1 refers to running state
-        }
-        else if (input.includes(this.player.movement_key_override['special'])) {
-            this.player.setState(states.P2SHOOTARROW); // 1 refers to running state
-        }
-
     }
 }

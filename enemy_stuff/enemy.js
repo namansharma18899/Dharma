@@ -1,83 +1,54 @@
-import { FLYING } from "./enemyStates.js";
+import { Flying } from './enemyStates.js';
+
 export class Enemy {
     constructor(game) {
-        this.movement_key_override = {
-            "up": "w",
-            "left": "a",
-            "down": "s",
-            "right": "d",
-            "special": "x",
-        }
-        this.game = game
-        this.width = 100; // dimensions
+        this.game = game;
+        this.width = 100;
         this.height = 100;
-        this.playerWidth = 62
-        this.playerHeight = 72
-        this.weight = 1;
+        this.spriteWidth = 62;
+        this.spriteHeight = 72;
         this.vy = 0;
+        this.weight = 1;
         this.x = 0;
-        // this.y = this.game.height - this.height - (this.game.groundMargin);
-        this.y = 50
-        this.playerFrameX = 0 // Frames
-        this.playerFrameY = 10 // IDK what's this...HELP ME ??
-        this.maxFrame;
-        this.fps = 10;  // FPS
+        this.y = 50;
+        this.frameX = 0;
+        this.frameY = 10;
+        this.maxFrame = 0;
+        this.fps = 10;
         this.frameInterval = 1000 / this.fps;
         this.frameTimer = 0;
-        this.speed = 2; // Speed
+        this.speed = 2;
         this.maxSpeed = 10;
-        this.image = document.getElementById('enemy_dragon'); // Images
-        this.background = document.getElementById('backgroundScenary'); // States
-        this.states = [new FLYING(this)]
+        this.image = document.getElementById('enemy_dragon');
+
+        this.states = [new Flying(this)];
         this.currentState = this.states[0];
-        this.currentState.enter()
-        // Wave movement parameters
+        this.currentState.enter();
+
         this.timeElapsed = 0;
-        this.waveAmplitude = 1.8;  // How high/low the object moves
-        this.waveFrequency = 0.050;  // Speed of the wave
+        this.waveAmplitude = 1.8;
+        this.waveFrequency = 0.050;
     }
 
-    update_flight(){
+    update(deltaTime) {
+        this.currentState.handleInput();
+        this.updateFlight();
+
+        if (this.x > this.game.width - this.width) this.x = 0;
+
+        this.advanceFrame(deltaTime);
+    }
+
+    updateFlight() {
         this.x += this.speed;
         this.timeElapsed++;
-        this.y = this.y + Math.sin(this.timeElapsed * this.waveFrequency) * this.waveAmplitude;
+        this.y += Math.sin(this.timeElapsed * this.waveFrequency) * this.waveAmplitude;
     }
 
-    update(input, deltaTime) {
-        this.currentState.handleInput(input);
-        this.update_flight()
-
-        // When nothing happens
-        // if (!(input.includes(this.movement_key_override['right']) || input.includes(this.movement_key_override['left']) || input.includes('w') || input.includes('s'))) {
-        //     this.setState(0);
-        // }
-        
-        if (input.includes(this.movement_key_override['right'])) this.speed = this.maxSpeed;
-        else if (input.includes(this.movement_key_override['left'])) this.speed = - this.maxSpeed;
-        // else this.speed = 0; // This is commented because we want to move our dragon
-        // Boundary
-        if (this.x < 0) {
-            console.log('resetting X')
-            this.x = 0;
-        }
-        // vertical
-        if (this.x > this.game.width - this.width) {
-            // this.x = this.game.width - this.width;
-            this.x = 0
-            // this.
-        }
-        // this.y += this.vy;
-        if (!this.onGround()) this.vy += this.weight;
-        else this.vy = 0;
-        // animation
+    advanceFrame(deltaTime) {
         if (this.frameTimer > this.frameInterval) {
             this.frameTimer = 0;
-            if (this.playerFrameX < this.maxFrame) {
-                this.playerFrameX++;
-            }
-            else {
-                this.playerFrameX = 0;
-            }
+            this.frameX = this.frameX < this.maxFrame ? this.frameX + 1 : 0;
         } else {
             this.frameTimer += deltaTime;
         }
@@ -88,11 +59,16 @@ export class Enemy {
     }
 
     draw(context) {
-        context.drawImage(this.image, this.playerFrameX * this.playerWidth, this.playerFrameY * this.playerHeight, this.playerWidth, this.playerHeight, this.x, this.y, this.width, this.height);
-        // context.drawImage(this.background,0,0,this.game.width, this.game.height-160); 
+        context.drawImage(
+            this.image,
+            this.frameX * this.spriteWidth, this.frameY * this.spriteHeight,
+            this.spriteWidth, this.spriteHeight,
+            this.x, this.y, this.width, this.height
+        );
     }
-    setState(state) {
-        this.currentState = this.states[state];
+
+    setState(stateIndex) {
+        this.currentState = this.states[stateIndex];
         this.currentState.enter();
     }
 }

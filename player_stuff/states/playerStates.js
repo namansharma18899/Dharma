@@ -1,124 +1,112 @@
-const states = {
-    'SITTING': 0,
-    'RUNNING': 1,
-    'JUMPING': 2,
-    'FALLING': 3,
-    'STANDING': 4
-}
-const playerWidth = 575
-const playerHeight = 523
+import { State } from '../../game_stuff/state.js';
 
-class State {
-    constructor(state) {
-        this.state = state
+export const PlayerState = Object.freeze({
+    SITTING: 0,
+    RUNNING: 1,
+    JUMPING: 2,
+    FALLING: 3,
+    STANDING: 4,
+});
+
+export class Sitting extends State {
+    constructor(player) {
+        super('SITTING', player);
     }
 
+    enter() {
+        this.entity.frameY = 5;
+        this.entity.frameX = 0;
+        this.entity.maxFrame = 4;
+    }
+
+    handleInput(input) {
+        const { right, left } = this.entity.keyBindings;
+        if (input.includes(right) || input.includes(left)) {
+            this.entity.setState(PlayerState.RUNNING);
+        }
+    }
+}
+
+export class Running extends State {
+    constructor(player) {
+        super('RUNNING', player);
+    }
+
+    enter() {
+        this.entity.frameY = 3;
+        this.entity.frameX = 0;
+        this.entity.maxFrame = 8;
+    }
+
+    handleInput(input) {
+        const { up, down } = this.entity.keyBindings;
+        if (input.includes(up) && this.entity.stamina >= 15) {
+            this.entity.setState(PlayerState.JUMPING);
+        } else if (input.includes(down)) {
+            this.entity.setState(PlayerState.SITTING);
+        }
+    }
+}
+
+export class Jumping extends State {
+    constructor(player) {
+        super('JUMPING', player);
+    }
+
+    enter() {
+        this.entity.frameX = 0;
+        this.entity.frameY = 1;
+        this.entity.maxFrame = 6;
+        if (this.entity.onGround()) {
+            this.entity.vy -= 27 * this.entity.staminaFactor;
+            this.entity.stamina -= 15;
+        }
+    }
+
+    handleInput(_input) {
+        if (this.entity.vy > this.entity.weight) {
+            this.entity.setState(PlayerState.FALLING);
+        }
+    }
 }
 
 export class Falling extends State {
     constructor(player) {
-        super('FALLING');
-        this.player = player
-    }
-    // Handle All variations in SITTING STATE
-    enter() {
-        this.player.playerFrameY = 2;
-        this.player.playerFrameX = 0;
-        this.player.maxFrame = 6;
-    }
-
-    handleInput(input) {
-        if (this.player.onGround()) {
-            this.player.setState(states.RUNNING);
-        }
-    }
-}
-export class Jumping extends State {
-    constructor(player) {
-        super('JUMPING');
-        this.player = player
-    }
-    // Handle All variations in SITTING STATE
-    enter() {
-        this.player.playerFrameX = 0;
-        if (this.player.onGround()) this.player.vy -= 27;
-        this.player.playerFrameY = 1;
-        this.player.maxFrame = 6;
-    }
-
-    handleInput(input) {
-        if (this.player.vy > this.player.weight) {
-            this.player.setState(states.FALLING);
-        }
-    }
-}
-export class Running extends State {
-    constructor(player) {
-        super('RUNNING');
-        this.player = player
-    }
-    // Handle All variations in SITTING STATE
-    enter() {
-        this.player.playerFrameY = 3;
-        this.player.playerFrameX = 0;
-        this.player.maxFrame = 8;
-    }
-
-    handleInput(input) {
-        if (input.includes(this.player.movement_key_override['up'])) {
-            this.player.setState(states.JUMPING);
-        }
-        else if (input.includes(this.player.movement_key_override['down'])) {
-            this.player.setState(states.SITTING); // 1 refers to running state
-        }
-        // else{ // Stanidng
-        //     this.player.setState(states.STANDING);
-        // }
-    }
-}
-export class Sitting extends State {
-    constructor(player) {
-        super('SITTING');
-        this.player = player
+        super('FALLING', player);
     }
 
     enter() {
-        this.player.playerFrameY = 5;
-        this.player.playerFrameX = 0;
-        this.player.maxFrame = 4;
+        this.entity.frameY = 2;
+        this.entity.frameX = 0;
+        this.entity.maxFrame = 6;
     }
 
-    handleInput(input) {
-        // console.log(`input > ${input}`)
-        if (input.includes(this.player.movement_key_override['right']) || input.includes(this.player.movement_key_override['left'])) {
-            this.player.setState(states.RUNNING); // 1 refers to running state
+    handleInput(_input) {
+        if (this.entity.onGround()) {
+            this.entity.setState(PlayerState.RUNNING);
         }
     }
 }
+
 export class Standing extends State {
     constructor(player) {
-        super('STANDING');
-        this.player = player
+        super('STANDING', player);
     }
 
     enter() {
-        this.player.playerFrameY = 0;
-        this.player.playerFrameX = 0;
-        this.player.maxFrame = 6;
+        this.entity.frameY = 0;
+        this.entity.frameX = 0;
+        this.entity.maxFrame = 6;
     }
 
     handleInput(input) {
-        // console.log(`input > ${input}`)
-        if (input.includes(this.player.movement_key_override['right']) || input.includes(this.player.movement_key_override['left'])) {
-            this.player.setState(states.RUNNING); // 1 refers to running state
+        const { right, left, up, down } = this.entity.keyBindings;
+        if (input.includes(right) || input.includes(left)) {
+            this.entity.setState(PlayerState.RUNNING);
+        } else if (input.includes(up) && this.entity.stamina >= 15) {
+            this.entity.setState(PlayerState.JUMPING);
+        } else if (input.includes(down)) {
+            this.entity.setState(PlayerState.SITTING);
         }
-        else if (input.includes(this.player.movement_key_override['up'])) {
-            this.player.setState(states.JUMPING);
-        }
-        else if (input.includes(this.player.movement_key_override['down'])) {
-            this.player.setState(states.SITTING); // 1 refers to running state
-        }
-
     }
 }
-
